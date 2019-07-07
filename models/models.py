@@ -1,7 +1,8 @@
 from datetime import datetime
 
+from flask_bcrypt import generate_password_hash
 from flask_login.mixins import UserMixin
-from peewee import BooleanField, CharField, DateTimeField
+from peewee import BooleanField, CharField, DateTimeField, IntegrityError
 
 from models.base_model import BaseModel
 
@@ -16,3 +17,15 @@ class User(UserMixin, BaseModel):
     class Meta:
         db_table = "user"
         order_by = "-joined_at"  # negative means sort in decending order
+
+    @classmethod
+    def create_user(cls, username, email, password, admin=False):
+        try:
+            cls.create(
+                username=username,
+                email=email,
+                password=generate_password_hash(password),
+                is_admin=admin,
+            )
+        except IntegrityError:
+            raise ValueError("User already exists!")
