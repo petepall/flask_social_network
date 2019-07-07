@@ -14,6 +14,7 @@ coverage = "*"
 flask = "*"
 peewee = "*"
 flask-login = "*"
+flask-bcrypt = "*"
 
 [requires]
 python_version = "3.7"
