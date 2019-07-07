@@ -1,8 +1,7 @@
-from flask import flash, Flask, g, redirect, render_template, url_for
+from flask import Flask, flash, g, redirect, render_template, url_for
 from flask_login.login_manager import LoginManager
 from peewee import DoesNotExist
 
-from models import user
 from models.base_model import DB
 from models.user import User
 from views.register_form import RegisterForm
@@ -44,7 +43,7 @@ def after_request(response):
 @app.route("/register", methods=("GET", "POST"))
 def register():
     form = RegisterForm()
-    if form.valid_on_submit():
+    if form.validate_on_submit():
         flash("Yay, you registered!", "success")
         User.create_user(
             username=form.username.data,
@@ -60,12 +59,21 @@ def index():
     return "Hey"
 
 
+def initialize():
+    DB.connect(reuse_if_open=True)
+    DB.create_tables([User], safe=True)
+    DB.close()
+
+
 if __name__ == "__main__":
-    user.initialize()
-    User.create_user(
-        username="petepall",
-        email="peter@ppallen.be",
-        password="strike",
-        admin=True,
-    )
+    initialize()
+    try:
+        User.create_user(
+            username="petepall",
+            email="peter@ppallen.be",
+            password="strike",
+            admin=True,
+        )
+    except ValueError:
+        pass
     app.run(debug=DEBUG)

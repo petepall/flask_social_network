@@ -1,3 +1,9 @@
+# Project folders to exclude
+db/
+
+# Project files to exclude
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
