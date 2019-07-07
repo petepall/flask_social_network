@@ -7,4 +7,4 @@ DB = SqliteDatabase(Path("db/social.db").resolve())
 
 class BaseModel(Model):
     class Meta:
-        db = DB
+        database = DB
