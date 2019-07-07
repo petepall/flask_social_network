@@ -1,10 +1,12 @@
 from datetime import datetime
 
+from flask_login.mixins import UserMixin
 from peewee import BooleanField, CharField, DateTimeField
+
 from models.base_model import BaseModel
 
 
-class User(BaseModel):
+class User(UserMixin, BaseModel):
     username = CharField(unique=True)
     email = CharField(unique=True)
     password = CharField(max_length=100)
