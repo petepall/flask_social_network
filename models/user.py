@@ -4,7 +4,7 @@ from flask_bcrypt import generate_password_hash
 from flask_login.mixins import UserMixin
 from peewee import BooleanField, CharField, DateTimeField, IntegrityError
 
-from models.base_model import BaseModel
+from models.base_model import BaseModel, DB
 
 
 class User(UserMixin, BaseModel):
@@ -29,3 +29,9 @@ class User(UserMixin, BaseModel):
             )
         except IntegrityError:
             raise ValueError("User already exists!")
+
+
+def initialize():
+    DB.connect()
+    DB.create_tables([User], safe=True)
+    DB.close()
