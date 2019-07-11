@@ -1,9 +1,16 @@
+"""UserID and password for testing:
+email: peter.pallen@gmail.com
+pass: strike
+"""
 from flask import Flask, flash, g, redirect, render_template, url_for
+from flask_bcrypt import check_password_hash
+from flask_login import login_user
 from flask_login.login_manager import LoginManager
 from peewee import DoesNotExist
 
 from models.base_model import DB
 from models.user import User
+from views.login_form import LoginForm
 from views.register_form import RegisterForm
 
 DEBUG = True
@@ -52,6 +59,24 @@ def register():
         )
         return redirect(url_for("index"))
     return render_template("register.html", form=form)
+
+
+@app.route("/login", methods=("GET", "POST"))
+def login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        try:
+            user = User.get(User.email == form.email.data)
+        except DoesNotExist:
+            flash("Your email or password does not match", "error")
+        else:
+            if check_password_hash(user.password, form.password.data):
+                login_user(user)
+                flash("You have been logged in!", "success")
+                return redirect(url_for("index"))
+            else:
+                flash("Your email or password does not match", "error")
+    return render_template("login.html", form=form)
 
 
 @app.route("/")
