@@ -4,7 +4,7 @@ pass: strike
 """
 from flask import Flask, flash, g, redirect, render_template, url_for
 from flask_bcrypt import check_password_hash
-from flask_login import login_user
+from flask_login import login_user, logout_user, login_required
 from flask_login.login_manager import LoginManager
 from peewee import DoesNotExist
 
@@ -77,6 +77,14 @@ def login():
             else:
                 flash("Your email or password does not match", "error")
     return render_template("login.html", form=form)
+
+
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    flash("you have been logged out! Come back soon!", "success")
+    return redirect(url_for("index"))
 
 
 @app.route("/")
