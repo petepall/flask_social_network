@@ -2,7 +2,9 @@ from flask import redirect
 from flask.helpers import flash, url_for
 from flask.templating import render_template
 
-from flaskblog import app
+from flaskblog import app, bcrypt, db
+from flaskblog.models.user_model import User
+from flaskblog.models.post_model import Post
 from flaskblog.views.login_form import LoginForm
 from flaskblog.views.registration_form import RegistrationForm
 
@@ -38,8 +40,22 @@ def about():
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
-        flash(f"Account created for {form.username.data.upper()}!", "success")
-        return redirect(url_for("home"))
+        hashed_password = bcrypt.generate_password_hash(
+            form.password.data
+        ).decode("utf-8")
+        user = User(
+            username=form.username.data,
+            email=form.email.data,
+            password=hashed_password,
+        )
+        db.session.add(user)
+        db.session.commit()
+        flash(
+            f"Account created for {form.username.data.upper()}! "
+            f"You are now able to log in",
+            "success",
+        )
+        return redirect(url_for("login"))
     return render_template("register.html.j2", title="Register", form=form)
 
 

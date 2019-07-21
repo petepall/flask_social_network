@@ -1,5 +1,5 @@
 # Project folders to exclude
-db/
+
 
 # Project files to exclude
 
@@ -108,3 +108,4 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+flaskblog/database/site.db
