@@ -1,7 +1,7 @@
-from flask import redirect
+from flask import redirect, request
 from flask.helpers import flash, url_for
 from flask.templating import render_template
-from flask_login import current_user, login_user, logout_user
+from flask_login import current_user, login_required, login_user, logout_user
 
 from flaskblog import app, bcrypt, db
 from flaskblog.models.post_model import Post
@@ -46,7 +46,10 @@ def login():
             user.password, form.password.data
         ):
             login_user(user, remember=form.remember.data)
-            return redirect(url_for("home"))
+            next_page = request.args.get("next")
+            return (
+                redirect(next_page) if next_page else redirect(url_for("home"))
+            )
         else:
             flash(
                 "Login unsuccessful. Please check username and password",
@@ -59,3 +62,9 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for("home"))
+
+
+@app.route("/account")
+@login_required
+def account():
+    return render_template("account.html.j2", title="Account")
