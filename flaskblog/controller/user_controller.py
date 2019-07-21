@@ -1,43 +1,19 @@
 from flask import redirect
 from flask.helpers import flash, url_for
 from flask.templating import render_template
+from flask_login import current_user, login_user, logout_user
 
 from flaskblog import app, bcrypt, db
-from flaskblog.models.user_model import User
 from flaskblog.models.post_model import Post
+from flaskblog.models.user_model import User
 from flaskblog.views.login_form import LoginForm
 from flaskblog.views.registration_form import RegistrationForm
-
-posts = [
-    {
-        "author": "Peter Pallen",
-        "title": "Blog post 1",
-        "content": "First post content",
-        "date_posted": "July 20, 2019",
-    },
-    {
-        "author": "Carine Pallen",
-        "title": "Blog post 2",
-        "content": "Second post content",
-        "date_posted": "July 21, 2019",
-    },
-]
-
-
-@app.route("/")
-@app.route("/home")
-@app.route("/index")
-def home():
-    return render_template("home.html.j2", posts=posts, title="Home")
-
-
-@app.route("/about")
-def about():
-    return render_template("about.html.j2", title="About")
 
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
+    if current_user.is_authenticated:
+        return redirect(url_for("home"))
     form = RegistrationForm()
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(
@@ -61,13 +37,15 @@ def register():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for("home"))
     form = LoginForm()
     if form.validate_on_submit():
-        if (
-            form.email.data == "admin@blog.com"
-            and form.password.data == "strike"
+        user = User.query.filter_by(email=form.email.data).first()
+        if user and bcrypt.check_password_hash(
+            user.password, form.password.data
         ):
-            flash("You have been logged in!", "success")
+            login_user(user, remember=form.remember.data)
             return redirect(url_for("home"))
         else:
             flash(
@@ -75,3 +53,9 @@ def login():
                 "danger",
             )
     return render_template("login.html.j2", title="Login", form=form)
+
+
+@app.route("/logout")
+def logout():
+    logout_user()
+    return redirect(url_for("home"))
