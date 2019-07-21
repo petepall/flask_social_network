@@ -14,4 +14,7 @@
         "statusBar.foreground": "#e7e7e7"
     },
     "python.pythonPath": ".venv\\Scripts\\python.exe",
+    "python.autoComplete.extraPaths": [
+        "/flaskblog",
+    ],
 }
