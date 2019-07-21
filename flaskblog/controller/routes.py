@@ -2,9 +2,11 @@ from flask import redirect
 from flask.helpers import flash, url_for
 from flask.templating import render_template
 
-from flaskblog.forms import LoginForm, RegistrationForm
-from flaskblog.models import Post, User
 from flaskblog import app
+from flaskblog.models.post_model import Post
+from flaskblog.models.user_model import User
+from flaskblog.views.login_form import LoginForm
+from flaskblog.views.registration_form import RegistrationForm
 
 posts = [
     {
