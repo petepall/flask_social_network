@@ -16,6 +16,9 @@
     "python.pythonPath": ".venv\\Scripts\\python.exe",
     "python.autoComplete.extraPaths": [
         "/flaskblog",
-        "/flaskblog/*",
+        // "/flaskblog/*",
+        // "/flaskblog/controller/*",
+        // "/flaskblog/models/*",
+        // "/flaskblog/views/*",
     ],
 }
