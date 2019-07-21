@@ -14,11 +14,4 @@
         "statusBar.foreground": "#e7e7e7"
     },
     "python.pythonPath": ".venv\\Scripts\\python.exe",
-    "sqltools.connections": [
-        {
-            "database": ".\\db\\social.db",
-            "dialect": "SQLite",
-            "name": "Flask Social network"
-        }
-    ]
 }
