@@ -1,5 +1,5 @@
 # Project folders to exclude
-
+/flaskblog/database
 
 # Project files to exclude
 
