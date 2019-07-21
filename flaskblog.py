@@ -1,6 +1,6 @@
 from flask import Flask
+from flask.helpers import url_for
 from flask.templating import render_template
-
 
 app = Flask(__name__)
 posts = [
