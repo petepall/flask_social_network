@@ -10,9 +10,13 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database/site.db"
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
-login_manager.login_view = 'login'
+login_manager.login_view = "login"
 login_manager.login_message_category = "info"
 
 # Needs to be imported here to resolve circular imports.
 # from flaskblog.controller import routes
-from flaskblog.controller import general_controller, user_controller
+from flaskblog.controller import (
+    general_controller,
+    user_controller,
+    posts_controller,
+)
