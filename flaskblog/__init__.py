@@ -15,7 +15,7 @@ login_manager.login_message_category = "info"
 
 # Needs to be imported here to resolve circular imports.
 # from flaskblog.controller import routes
-from flaskblog.controller import (
+from flaskblog.controller import (  # noqa  Discable check
     general_controller,
     user_controller,
     posts_controller,
