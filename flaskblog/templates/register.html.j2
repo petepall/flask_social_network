@@ -16,7 +16,7 @@
                             {% endfor %}
                         </div>
                     {% else %}
-                        {{ form.username(class="form-control form-control-lg") }}
+                        {{ form.username(title='Minimum 2 char, Max 20 char', data_toggle='tooltip', class="form-control form-control-lg") }}
                     {% endif %}
                 </div>
                 <div class="form-group">
