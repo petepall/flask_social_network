@@ -4,7 +4,7 @@ from flask.templating import render_template
 from flask_login import current_user, login_required, login_user, logout_user
 
 from flaskblog import app, bcrypt, db
-from flaskblog.models.post_model import Post
+from flaskblog.models.post_model import Post  # noqa
 from flaskblog.models.user_model import User
 from flaskblog.views.login_form import LoginForm
 from flaskblog.views.registration_form import RegistrationForm
