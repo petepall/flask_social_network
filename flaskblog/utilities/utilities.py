@@ -14,11 +14,16 @@ def save_picture(form_picture):
     picture_path = os.path.join(
         app.root_path, "static/profile_pics", picture_fn
     )
+    image = resize_picture(form_picture)
+    image.save(picture_path)
+    return picture_fn
+
+
+def resize_picture(form_picture):
     output_size = (125, 125)
     image = Image.open(form_picture)
     image.thumbnail(output_size)
-    image.save(picture_path)
-    return picture_fn
+    return image
 
 
 def delete_picture_file(picture_file):
