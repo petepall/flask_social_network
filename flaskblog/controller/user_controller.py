@@ -6,7 +6,11 @@ from flask_login import current_user, login_required, login_user, logout_user
 from flaskblog import app, bcrypt, db
 from flaskblog.models.post_model import Post  # noqa
 from flaskblog.models.user_model import User
-from flaskblog.utilities.utilities import delete_picture_file, save_picture
+from flaskblog.utilities.utilities import (
+    delete_picture_file,
+    save_picture,
+    send_reset_email
+)
 from flaskblog.views.login_form import LoginForm
 from flaskblog.views.registration_form import RegistrationForm
 from flaskblog.views.request_reset_form import RequestResetForm
@@ -99,8 +103,30 @@ def reset_request():
     if current_user.is_authenticated:
         return redirect(url_for("home"))
     form = RequestResetForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        send_reset_email(user)
+        flash(
+            "An email has been send with instructions to reset your password",
+            "info",
+        )
+        return redirect(url_for("login"))
     return render_template(
         "reset_request.html.j2", title="Reset password", form=form
     )
 
 
+@app.route("/reset_password/<token>", methods=["GET", "POST"])
+def reset_token(token):
+    if current_user.is_authenticated:
+        return redirect(url_for("home"))
+
+    user = User.verify_reset_token(token)
+    if user is None:
+        flash("That is an invalid or expired token", "warning")
+        return redirect(url_for("reset_request"))
+
+    form = ResetPasswordForm()
+    return render_template(
+        "reset_token.html.j2", title="Reset password", form=form
+    )
