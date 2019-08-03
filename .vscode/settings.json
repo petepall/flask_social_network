@@ -22,4 +22,5 @@
         // "/flaskblog/views/*",
     ],
     "python.formatting.provider": "black",
+    "peacock.color": "#215732",
 }
