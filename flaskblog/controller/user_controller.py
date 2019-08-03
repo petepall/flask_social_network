@@ -6,10 +6,12 @@ from flask_login import current_user, login_required, login_user, logout_user
 from flaskblog import app, bcrypt, db
 from flaskblog.models.post_model import Post  # noqa
 from flaskblog.models.user_model import User
+from flaskblog.utilities.utilities import delete_picture_file, save_picture
 from flaskblog.views.login_form import LoginForm
 from flaskblog.views.registration_form import RegistrationForm
+from flaskblog.views.request_reset_form import RequestResetForm
+from flaskblog.views.reset_passwod_form import ResetPasswordForm
 from flaskblog.views.update_account_form import UpdateAccountForm
-from flaskblog.utilities.utilities import save_picture, delete_picture_file
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -90,3 +92,15 @@ def account():
     return render_template(
         "account.html.j2", title="Account", image_file=image_file, form=form
     )
+
+
+@app.route("/reset_password", methods=["GET", "POST"])
+def reset_request():
+    if current_user.is_authenticated:
+        return redirect(url_for("home"))
+    form = RequestResetForm()
+    return render_template(
+        "reset_request.html.j2", title="Reset password", form=form
+    )
+
+
