@@ -1,10 +1,13 @@
 import os
 import secrets
 from builtins import FileNotFoundError
+from smtplib import SMTPAuthenticationError
 
+from flask.helpers import flash, url_for
+from flask_mail import Message
 from PIL import Image
 
-from flaskblog import app
+from flaskblog import app, mail
 
 
 def save_picture(form_picture):
@@ -35,3 +38,21 @@ def delete_picture_file(picture_file):
             os.remove(picture_path)
         except FileNotFoundError:
             pass
+
+
+def send_reset_email(user):
+    token = user.get_reset_token()
+    msg = Message(
+        "Password reset request",
+        sender="noreply@demo.com",
+        recipients=[user.email],
+    )
+    msg.body = f"""To reset your password, visit the following link:
+{url_for('reset_token', token=token, _external=True)}
+    
+If you did not make this request, then simply ignore this email and no change will be done 
+"""  # noqa
+    try:
+        mail.send(msg)
+    except SMTPAuthenticationError as err:
+        flash(f"The authentication failed {err}")

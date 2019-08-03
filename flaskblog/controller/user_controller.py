@@ -127,6 +127,18 @@ def reset_token(token):
         return redirect(url_for("reset_request"))
 
     form = ResetPasswordForm()
+    if form.validate_on_submit():
+        hashed_password = bcrypt.generate_password_hash(
+            form.password.data
+        ).decode("utf-8")
+        user.password = hashed_password
+        db.session.commit()
+        flash(
+            f"Your password has been updated! "
+            f"You are now able to log in",
+            "success",
+        )
+        return redirect(url_for("login"))
     return render_template(
         "reset_token.html.j2", title="Reset password", form=form
     )
