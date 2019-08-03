@@ -26,9 +26,9 @@ mail = Mail(app)
 # from flaskblog.controller import routes
 # from flaskblog.controller import (general_controller,  # noqa  Discable check
 #                                   posts_controller, user_controller)
-from flaskblog.user_controller import users  # noqa
-from flaskblog.general_controller import main  # noqa
-from flaskblog.posts_controller import posts  # noqa
+from flaskblog.controller.user_controller import users  # noqa
+from flaskblog.controller.general_controller import main  # noqa
+from flaskblog.controller.posts_controller import posts  # noqa
 
 
 app.register_blueprint(users)
