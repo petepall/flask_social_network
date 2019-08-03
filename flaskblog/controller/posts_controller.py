@@ -5,6 +5,7 @@ from flask_login import current_user, login_required
 
 from flaskblog import app, db
 from flaskblog.models.post_model import Post
+from flaskblog.models.user_model import User
 from flaskblog.views.post_form import PostForm
 
 
@@ -70,3 +71,17 @@ def delete_post(post_id):
     db.session.commit()
     flash("Your post has been deleted!", "success")
     return redirect(url_for("home"))
+
+
+@app.route("/user/<string:username>")
+def user_posts(username):
+    page = request.args.get("page", 1, type=int)
+    user = User.query.filter_by(username=username).first_or_404()
+    posts = (
+        Post.query.filter_by(author=user)
+        .order_by(Post.date_posted.desc())
+        .paginate(page=page, per_page=5)
+    )
+    return render_template(
+        "user_posts.html.j2", posts=posts, user=user, title="User posts"
+    )
