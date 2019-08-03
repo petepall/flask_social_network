@@ -28,9 +28,11 @@ def create_app(config_class=Config):
     from flaskblog.controller.user_controller import users  # noqa
     from flaskblog.controller.general_controller import main  # noqa
     from flaskblog.controller.posts_controller import posts  # noqa
+    from flaskblog.errors.handlers import errors  # noqa
 
     app.register_blueprint(users)
     app.register_blueprint(posts)
     app.register_blueprint(main)
+    app.register_blueprint(errors)
 
     return app
