@@ -3,11 +3,12 @@ import secrets
 from builtins import FileNotFoundError
 from smtplib import SMTPAuthenticationError
 
+from flask.globals import current_app
 from flask.helpers import flash, url_for
 from flask_mail import Message
 from PIL import Image
 
-from flaskblog import app, mail
+from flaskblog import mail
 
 
 def save_picture(form_picture):
@@ -15,7 +16,7 @@ def save_picture(form_picture):
     _, f_ext = os.path.splitext(form_picture.filename)
     picture_fn = random_hex + f_ext
     picture_path = os.path.join(
-        app.root_path, "static/profile_pics", picture_fn
+        current_app.root_path, "static/profile_pics", picture_fn
     )
     image = resize_picture(form_picture)
     image.save(picture_path)
@@ -31,7 +32,7 @@ def resize_picture(form_picture):
 
 def delete_picture_file(picture_file):
     picture_path = os.path.join(
-        app.root_path, "static/profile_pics", picture_file
+        current_app.root_path, "static/profile_pics", picture_file
     )
     if picture_file != "default.jpg":
         try:
