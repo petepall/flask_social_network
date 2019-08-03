@@ -1,13 +1,15 @@
+from flask import Blueprint
 from flask.globals import request
 from flask.templating import render_template
 
-from flaskblog import app
 from flaskblog.models.post_model import Post
 
+main = Blueprint("main", __name__)
 
-@app.route("/")
-@app.route("/home")
-@app.route("/index")
+
+@main.route("/")
+@main.route("/home")
+@main.route("/index")
 def home():
     page = request.args.get("page", 1, type=int)
     posts = Post.query.order_by(Post.date_posted.desc()).paginate(
@@ -16,6 +18,6 @@ def home():
     return render_template("home.html.j2", posts=posts, title="Home")
 
 
-@app.route("/about")
+@main.route("/about")
 def about():
     return render_template("about.html.j2", title="About")

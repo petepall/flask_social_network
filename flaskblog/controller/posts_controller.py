@@ -1,15 +1,17 @@
-from flask import abort, redirect, request
+from flask import Blueprint, abort, redirect, request
 from flask.helpers import flash, url_for
 from flask.templating import render_template
 from flask_login import current_user, login_required
 
-from flaskblog import app, db
+from flaskblog import db
 from flaskblog.models.post_model import Post
 from flaskblog.models.user_model import User
 from flaskblog.views.post_form import PostForm
 
+posts = Blueprint("posts", __name__)
 
-@app.route("/post/new", methods=["GET", "POST"])
+
+@posts.route("/post/new", methods=["GET", "POST"])
 @login_required
 def new_post():
     form = PostForm()
@@ -22,19 +24,19 @@ def new_post():
         db.session.add(post)
         db.session.commit()
         flash("Your post has been created!", "success")
-        return redirect(url_for("home"))
+        return redirect(url_for("main.home"))
     return render_template(
         "create_post.html.j2", title="New post", form=form, legend="New post"
     )
 
 
-@app.route("/post/<int:post_id>")
+@posts.route("/post/<int:post_id>")
 def post(post_id):
     post = Post.query.get_or_404(post_id)
     return render_template("post.html.j2", title=post.title, post=post)
 
 
-@app.route("/post/<int:post_id>/update", methods=["GET", "POST"])
+@posts.route("/post/<int:post_id>/update", methods=["GET", "POST"])
 @login_required
 def update_post(post_id):
     post = Post.query.get_or_404(post_id)
@@ -47,7 +49,7 @@ def update_post(post_id):
         post.content = form.content.data
         db.session.commit()
         flash("Your post has been updated!", "success")
-        return redirect(url_for("post", post_id=post.id))
+        return redirect(url_for("posts.post", post_id=post.id))
     elif request.method == "GET":
         form.title.data = post.title
         form.content.data = post.content
@@ -60,7 +62,7 @@ def update_post(post_id):
     )
 
 
-@app.route("/post/<int:post_id>/delete", methods=["POST"])
+@posts.route("/post/<int:post_id>/delete", methods=["POST"])
 @login_required
 def delete_post(post_id):
     post = Post.query.get_or_404(post_id)
@@ -70,10 +72,10 @@ def delete_post(post_id):
     db.session.delete(post)
     db.session.commit()
     flash("Your post has been deleted!", "success")
-    return redirect(url_for("home"))
+    return redirect(url_for("main.home"))
 
 
-@app.route("/user/<string:username>")
+@posts.route("/user/<string:username>")
 def user_posts(username):
     page = request.args.get("page", 1, type=int)
     user = User.query.filter_by(username=username).first_or_404()

@@ -13,7 +13,7 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database/site.db"
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
-login_manager.login_view = "login"
+login_manager.login_view = "users.login"
 login_manager.login_message_category = "info"
 app.config["MAIL_SERVER"] = "smtp.googlemail.com"
 app.config["MAIL_PORT"] = 587
@@ -24,5 +24,13 @@ mail = Mail(app)
 
 # Needs to be imported here to resolve circular imports.
 # from flaskblog.controller import routes
-from flaskblog.controller import (general_controller,  # noqa  Discable check
-                                  posts_controller, user_controller)
+# from flaskblog.controller import (general_controller,  # noqa  Discable check
+#                                   posts_controller, user_controller)
+from flaskblog.user_controller import users  # noqa
+from flaskblog.general_controller import main  # noqa
+from flaskblog.posts_controller import posts  # noqa
+
+
+app.register_blueprint(users)
+app.register_blueprint(posts)
+app.register_blueprint(main)
