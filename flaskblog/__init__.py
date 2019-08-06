@@ -15,6 +15,15 @@ mail = Mail()
 
 
 def create_app(config_class=Config):
+    """Function creating the app
+
+    Parameters
+    ----------
+
+    config_class : Object, optional
+
+        Manage the app setup settings, by default Config
+    """
     app = Flask(__name__)
     app.config.from_object(Config)
 
