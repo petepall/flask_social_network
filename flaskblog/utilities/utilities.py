@@ -12,6 +12,14 @@ from flaskblog import mail
 
 
 def save_picture(form_picture):
+    """Funtion to save profile picture to disk with standardized filename
+
+    Parameters
+    ----------
+    form_picture : object
+
+        Picture data including the filename
+    """
     random_hex = secrets.token_hex(8)
     _, f_ext = os.path.splitext(form_picture.filename)
     picture_fn = random_hex + f_ext
@@ -24,6 +32,14 @@ def save_picture(form_picture):
 
 
 def resize_picture(form_picture):
+    """Resize the provided picture to a standard format of 125x125
+
+    Parameters
+    ----------
+    form_picture : image
+
+        Image object that needs to be resized
+    """
     output_size = (125, 125)
     image = Image.open(form_picture)
     image.thumbnail(output_size)
@@ -31,6 +47,14 @@ def resize_picture(form_picture):
 
 
 def delete_picture_file(picture_file):
+    """Delete the given picture file from the disk if it exists
+
+    Parameters
+    ----------
+    picture_file : string
+
+        Delete the picture with the given filename from the disk
+    """
     picture_path = os.path.join(
         current_app.root_path, "static/profile_pics", picture_file
     )
@@ -42,6 +66,14 @@ def delete_picture_file(picture_file):
 
 
 def send_reset_email(user):
+    """Send a reset email to a user
+
+    Parameters
+    ----------
+    user : User
+
+        User object containing the data of a User including the email address
+    """
     token = user.get_reset_token()
     msg = Message(
         "Password reset request",

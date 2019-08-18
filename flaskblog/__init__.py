@@ -15,7 +15,7 @@ mail = Mail()
 
 
 def create_app(config_class=Config):
-    """Function creating the app
+    """Creates the app and initializes the config of the app
 
     Parameters
     ----------
@@ -33,7 +33,6 @@ def create_app(config_class=Config):
     mail.init_app(app)
 
     # Needs to be imported here to resolve circular imports.
-    # from flaskblog.controller import routes
     from flaskblog.controller.user_controller import users  # noqa
     from flaskblog.controller.general_controller import main  # noqa
     from flaskblog.controller.posts_controller import posts  # noqa

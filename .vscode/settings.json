@@ -23,4 +23,11 @@
     ],
     "python.formatting.provider": "black",
     "peacock.color": "#215732",
+    "sqltools.connections": [
+        {
+            "database": ".\\flaskblog\\database\\site.db",
+            "dialect": "SQLite",
+            "name": "flaskblog"
+        }
+    ],
 }
