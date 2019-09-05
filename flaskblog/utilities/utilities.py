@@ -32,13 +32,10 @@ def save_picture(form_picture):
 
 
 def resize_picture(form_picture):
-    """Resize the provided picture to a standard format of 125x125
+    """Resizing of a given picture to format of 125 x 125
 
-    Parameters
-    ----------
-    form_picture : image
-
-        Image object that needs to be resized
+    :param form_picture: Picture data
+    :type form_picture: object
     """
     output_size = (125, 125)
     image = Image.open(form_picture)

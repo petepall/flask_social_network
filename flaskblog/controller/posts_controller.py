@@ -14,6 +14,8 @@ posts = Blueprint("posts", __name__)
 @posts.route("/post/new", methods=["GET", "POST"])
 @login_required
 def new_post():
+    """Route for handling new blog posts
+    """
     form = PostForm()
     if form.validate_on_submit():
         post = Post(
@@ -32,6 +34,11 @@ def new_post():
 
 @posts.route("/post/<int:post_id>")
 def post(post_id):
+    """Shows a specific posts data
+    
+    :param post_id: ID number of the blog post
+    :type post_id: int
+    """
     post = Post.query.get_or_404(post_id)
     return render_template("post.html.j2", title=post.title, post=post)
 
