@@ -13,7 +13,7 @@
         "statusBarItem.hoverBackground": "#2f7c47",
         "statusBar.foreground": "#e7e7e7"
     },
-    "python.pythonPath": ".venv\\Scripts\\python.exe",
+    "python.pythonPath": "venv/bin/python",
     "python.autoComplete.extraPaths": [
         "/flaskblog",
         // "/flaskblog/*",
@@ -30,4 +30,7 @@
             "name": "flaskblog"
         }
     ],
+    "python.linting.flake8Enabled": true,
+    "python.linting.mypyEnabled": false,
+    "python.linting.enabled": true,
 }
