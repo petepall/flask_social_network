@@ -1,13 +1,12 @@
-from flask_wtf.form import FlaskForm
-from wtforms.ext.sqlalchemy.fields import ValidationError
-from wtforms.fields.core import StringField
-from wtforms.fields.simple import SubmitField
-from wtforms.validators import DataRequired, Email
+import flask_wtf.form
+import wtforms.fields.core as wtforms_core
+import wtforms.fields.simple as wtforms_simple
+import wtforms.validators
 
-from flaskblog.models.user_model import User
+import flaskblog.models.user_model as flaskblog_user
 
 
-class RequestResetForm(FlaskForm):
+class RequestResetForm(flask_wtf.form.FlaskForm):
     """Class representing the user password reset request form for the
     application
 
@@ -18,8 +17,14 @@ class RequestResetForm(FlaskForm):
         Flask wtf class that is extended to create the user login form
     """
 
-    email = StringField("Email", validators=[DataRequired(), Email()])
-    submit = SubmitField("Request password reset")
+    email = wtforms_core.StringField(
+        "Email",
+        validators=[
+            wtforms.validators.DataRequired(),
+            wtforms.validators.Email(),
+        ],
+    )
+    submit = wtforms_simple.SubmitField("Request password reset")
 
     def validate_email(self, email):
         """Validate if the given email is still available against the DB
@@ -30,8 +35,8 @@ class RequestResetForm(FlaskForm):
 
             email as entered in the form.
         """
-        user = User.query.filter_by(email=email.data).first()
+        user = flaskblog_user.User.query.filter_by(email=email.data).first()
         if user is None:
-            raise ValidationError(
+            raise wtforms.validators.ValidationError(
                 "There is no account with this email. You must register first."
             )

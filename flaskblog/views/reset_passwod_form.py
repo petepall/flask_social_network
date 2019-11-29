@@ -1,9 +1,9 @@
-from flask_wtf.form import FlaskForm
-from wtforms.fields.simple import PasswordField, SubmitField
-from wtforms.validators import DataRequired, EqualTo
+import flask_wtf.form
+import wtforms.fields.simple as wtforms_simple
+import wtforms.validators
 
 
-class ResetPasswordForm(FlaskForm):
+class ResetPasswordForm(flask_wtf.form.FlaskForm):
     """Class representing the password reset form for the application
 
     Parameters
@@ -12,8 +12,15 @@ class ResetPasswordForm(FlaskForm):
 
         Flask wtf class that is extended to create the user login form
     """
-    password = PasswordField("Password", validators=[DataRequired()])
-    confirm_password = PasswordField(
-        "Confirm Password", validators=[DataRequired(), EqualTo("password")]
+
+    password = wtforms_simple.PasswordField(
+        "Password", validators=[wtforms.validators.DataRequired()]
     )
-    submit = SubmitField("Reset password")
+    confirm_password = wtforms_simple.PasswordField(
+        "Confirm Password",
+        validators=[
+            wtforms.validators.DataRequired(),
+            wtforms.validators.EqualTo("password"),
+        ],
+    )
+    submit = wtforms_simple.SubmitField("Reset password")

@@ -1,11 +1,11 @@
-from flask_login import UserMixin
+import flask
+import flask_login
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 
-from flaskblog import db, login_manager
-from flask import current_app
+import flaskblog
 
 
-@login_manager.user_loader
+@flaskblog.login_manager.user_loader
 def load_user(user_id):
     """Load the current user's id
 
@@ -18,7 +18,7 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 
-class User(db.Model, UserMixin):
+class User(flaskblog.db.Model, flask_login.UserMixin):
     """Class representing the User table in the database
 
     Parameters
@@ -32,14 +32,18 @@ class User(db.Model, UserMixin):
         Enables Flask user management functions
     """
 
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(20), unique=True, nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
-    image_file = db.Column(
-        db.String(20), nullable=False, default="default.jpg"
+    id = flaskblog.db.Column(flaskblog.db.Integer, primary_key=True)
+    username = flaskblog.db.Column(
+        flaskblog.db.String(20), unique=True, nullable=False
     )
-    password = db.Column(db.String(60), nullable=False)
-    posts = db.relationship("Post", backref="author", lazy=True)
+    email = flaskblog.db.Column(
+        flaskblog.db.String(120), unique=True, nullable=False
+    )
+    image_file = flaskblog.db.Column(
+        flaskblog.db.String(20), nullable=False, default="default.jpg"
+    )
+    password = flaskblog.db.Column(flaskblog.db.String(60), nullable=False)
+    posts = flaskblog.db.relationship("Post", backref="author", lazy=True)
 
     def __repr__(self):
         """String representation for the User
@@ -55,7 +59,7 @@ class User(db.Model, UserMixin):
 
             delay in seconds after which the token expires, by default 1800
         """
-        s = Serializer(current_app.config["SECRET_KEY"], expires_seconds)
+        s = Serializer(flask.current_app.config["SECRET_KEY"], expires_seconds)
         return s.dumps({"user_id": self.id}).decode("utf-8")
 
     @staticmethod
@@ -68,7 +72,7 @@ class User(db.Model, UserMixin):
 
             Token to verify
         """
-        s = Serializer(current_app.config["SECRET_KEY"])
+        s = Serializer(flask.current_app.config["SECRET_KEY"])
         try:
             user_id = s.loads(token)["user_id"]
         except:  # noqa

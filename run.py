@@ -1,7 +1,6 @@
-from flaskblog import create_app
+import flaskblog
 
-
-app = create_app()
+app = flaskblog.create_app()
 
 if __name__ == "__main__":
     app.run(host="localhost", debug=True)

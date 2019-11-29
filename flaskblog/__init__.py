@@ -1,20 +1,20 @@
-from flask import Flask
-from flask_bcrypt import Bcrypt
-from flask_login import LoginManager
-from flask_mail import Mail
-from flask_sqlalchemy import SQLAlchemy
+import flask
+import flask_bcrypt
+import flask_login
+import flask_mail
+import flask_sqlalchemy as flask_sqa
 
-from flaskblog.config import Config
+import flaskblog.config as flaskblog_cf
 
-db = SQLAlchemy()
-bcrypt = Bcrypt()
-login_manager = LoginManager()
+db = flask_sqa.SQLAlchemy()
+bcrypt = flask_bcrypt.Bcrypt()
+login_manager = flask_login.LoginManager()
 login_manager.login_view = "users.login"
 login_manager.login_message_category = "info"
-mail = Mail()
+mail = flask_mail.Mail()
 
 
-def create_app(config_class=Config):
+def create_app(config_class=flaskblog_cf.Config):
     """Creates the app and initializes the config of the app
 
     Parameters
@@ -24,23 +24,22 @@ def create_app(config_class=Config):
 
         Manage the app setup settings, by default Config
     """
-    app = Flask(__name__)
-    app.config.from_object(Config)
+    app = flask.Flask(__name__)
+    app.config.from_object(flaskblog_cf.Config)
 
     db.init_app(app)
     bcrypt.init_app(app)
     login_manager.init_app(app)
     mail.init_app(app)
 
-    # Needs to be imported here to resolve circular imports.
-    from flaskblog.controller.user_controller import users  # noqa
-    from flaskblog.controller.general_controller import main  # noqa
-    from flaskblog.controller.posts_controller import posts  # noqa
-    from flaskblog.controller.error_pages_controller import errors  # noqa
+    import flaskblog.controller.user_controller as flaskblog_user_ctrl
+    import flaskblog.controller.general_controller as flaskblog_general_ctrl
+    import flaskblog.controller.posts_controller as flaskblog_post_ctrl
+    import flaskblog.controller.error_pages_controller as flaskblog_error_ctrl
 
-    app.register_blueprint(users)
-    app.register_blueprint(posts)
-    app.register_blueprint(main)
-    app.register_blueprint(errors)
+    app.register_blueprint(flaskblog_user_ctrl.users)
+    app.register_blueprint(flaskblog_post_ctrl.posts)
+    app.register_blueprint(flaskblog_general_ctrl.main)
+    app.register_blueprint(flaskblog_error_ctrl.errors)
 
     return app

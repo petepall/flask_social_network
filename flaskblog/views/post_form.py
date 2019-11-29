@@ -1,10 +1,10 @@
-from flask_wtf import FlaskForm
-from wtforms.fields.core import StringField
-from wtforms.fields.simple import SubmitField, TextAreaField
-from wtforms.validators import DataRequired
+import flask_wtf
+import wtforms.fields.core as wtforms_core
+import wtforms.fields.simple as wtforms_simple
+import wtforms.validators
 
 
-class PostForm(FlaskForm):
+class PostForm(flask_wtf.FlaskForm):
     """Class representing the blog post form for the application
 
     Parameters
@@ -13,6 +13,11 @@ class PostForm(FlaskForm):
 
         Flask wtf class that is extended to create the user login form
     """
-    title = StringField("Title", validators=[DataRequired()])
-    content = TextAreaField("Content", validators=[DataRequired()])
-    submit = SubmitField("Post")
+
+    title = wtforms_core.StringField(
+        "Title", validators=[wtforms.validators.DataRequired()]
+    )
+    content = wtforms_simple.TextAreaField(
+        "Content", validators=[wtforms.validators.DataRequired()]
+    )
+    submit = wtforms_simple.SubmitField("Post")

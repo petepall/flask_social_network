@@ -1,9 +1,9 @@
 from datetime import datetime
 
-from flaskblog import db
+import flaskblog
 
 
-class Post(db.Model):
+class Post(flaskblog.db.Model):
     """Class representing the Post table in the database
 
     Parameters
@@ -13,13 +13,17 @@ class Post(db.Model):
         represents the database object.
     """
 
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(100), nullable=False)
-    date_posted = db.Column(
-        db.DateTime, nullable=False, default=datetime.utcnow
+    id = flaskblog.db.Column(flaskblog.db.Integer, primary_key=True)
+    title = flaskblog.db.Column(flaskblog.db.String(100), nullable=False)
+    date_posted = flaskblog.db.Column(
+        flaskblog.db.DateTime, nullable=False, default=datetime.utcnow
     )
-    content = db.Column(db.Text, nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    content = flaskblog.db.Column(flaskblog.db.Text, nullable=False)
+    user_id = flaskblog.db.Column(
+        flaskblog.db.Integer,
+        flaskblog.db.ForeignKey("user.id"),
+        nullable=False,
+    )
 
     def __repr__(self):
         """String representation of the post object

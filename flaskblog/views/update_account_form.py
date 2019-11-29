@@ -1,14 +1,14 @@
-from flask_login import current_user
-from flask_wtf import FlaskForm
-from flask_wtf.file import FileAllowed, FileField
-from wtforms.fields.core import StringField
-from wtforms.fields.simple import SubmitField
-from wtforms.validators import DataRequired, Email, Length, ValidationError
+import flask_login
+import flask_wtf
+import flask_wtf.file as flask_file
+import wtforms.fields.core as wtforms_core
+import wtforms.fields.simple as wtforms_simple
+import wtforms.validators
 
-from flaskblog.models.user_model import User
+import flaskblog.models.user_model as flaskblog_user
 
 
-class UpdateAccountForm(FlaskForm):
+class UpdateAccountForm(flask_wtf.FlaskForm):
     """Class representing the account update form for the application
 
     Parameters
@@ -17,14 +17,26 @@ class UpdateAccountForm(FlaskForm):
 
         Flask wtf class that is extended to create the user login form
     """
-    username = StringField(
-        "Username", validators=[DataRequired(), Length(min=2, max=20)]
+
+    username = wtforms_core.StringField(
+        "Username",
+        validators=[
+            wtforms.validators.DataRequired(),
+            wtforms.validators.Length(min=2, max=20),
+        ],
     )
-    email = StringField("Email", validators=[DataRequired(), Email()])
-    picture = FileField(
-        "Update profile picture", validators=[FileAllowed(["jpg", "png"])]
+    email = wtforms_core.StringField(
+        "Email",
+        validators=[
+            wtforms.validators.DataRequired(),
+            wtforms.validators.Email(),
+        ],
     )
-    submit = SubmitField("Update")
+    picture = flask_file.FileField(
+        "Update profile picture",
+        validators=[flask_file.FileAllowed(["jpg", "png"])],
+    )
+    submit = wtforms_simple.SubmitField("Update")
 
     def validate_username(self, username):
         """Validate if the given username is still available against the DB
@@ -35,10 +47,12 @@ class UpdateAccountForm(FlaskForm):
 
             Username as entered in the form.
         """
-        if username.data != current_user.username:
-            user = User.query.filter_by(username=username.data).first()
+        if username.data != flask_login.current_user.username:
+            user = flaskblog_user.User.query.filter_by(
+                username=username.data
+            ).first()
             if user:
-                raise ValidationError(
+                raise wtforms.validators.ValidationError(
                     "That username is taken. Please choose a different one"
                 )
 
@@ -51,9 +65,11 @@ class UpdateAccountForm(FlaskForm):
 
             email as entered in the form.
         """
-        if email.data != current_user.email:
-            user = User.query.filter_by(email=email.data).first()
+        if email.data != flask_login.current_user.email:
+            user = flaskblog_user.User.query.filter_by(
+                email=email.data
+            ).first()
             if user:
-                raise ValidationError(
+                raise wtforms.validators.ValidationError(
                     "That email address is taken. Please choose a different one"
                 )

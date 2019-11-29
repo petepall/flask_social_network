@@ -1,17 +1,12 @@
-from flask_wtf import FlaskForm
-from wtforms.fields.core import StringField
-from wtforms.fields.simple import PasswordField, SubmitField
-from wtforms.validators import (
-    DataRequired,
-    Email,
-    EqualTo,
-    Length,
-    ValidationError,
-)
-from flaskblog.models.user_model import User
+import flask_wtf
+import wtforms.fields.core as wtforms_core
+import wtforms.fields.simple as wtforms_simple
+import wtforms.validators
+
+import flaskblog.models.user_model as flaskblog_user
 
 
-class RegistrationForm(FlaskForm):
+class RegistrationForm(flask_wtf.FlaskForm):
     """Class representing the registration form for the application
 
     Parameters
@@ -21,15 +16,31 @@ class RegistrationForm(FlaskForm):
         Flask wtf class that is extended to create the user login form
     """
 
-    username = StringField(
-        "Username", validators=[DataRequired(), Length(min=2, max=20)]
+    username = wtforms_core.StringField(
+        "Username",
+        validators=[
+            wtforms.validators.DataRequired(),
+            wtforms.validators.Length(min=2, max=20),
+        ],
     )
-    email = StringField("Email", validators=[DataRequired(), Email()])
-    password = PasswordField("Password", validators=[DataRequired()])
-    confirm_password = PasswordField(
-        "Confirm Password", validators=[DataRequired(), EqualTo("password")]
+    email = wtforms_core.StringField(
+        "Email",
+        validators=[
+            wtforms.validators.DataRequired(),
+            wtforms.validators.Email(),
+        ],
     )
-    submit = SubmitField("Sign Up")
+    password = wtforms_simple.PasswordField(
+        "Password", validators=[wtforms.validators.DataRequired()]
+    )
+    confirm_password = wtforms_simple.PasswordField(
+        "Confirm Password",
+        validators=[
+            wtforms.validators.DataRequired(),
+            wtforms.validators.EqualTo("password"),
+        ],
+    )
+    submit = wtforms_simple.SubmitField("Sign Up")
 
     def validate_username(self, username):
         """Validate if the given username is still available against the DB
@@ -40,9 +51,11 @@ class RegistrationForm(FlaskForm):
 
             Username as entered in the form.
         """
-        user = User.query.filter_by(username=username.data).first()
+        user = flaskblog_user.User.query.filter_by(
+            username=username.data
+        ).first()
         if user:
-            raise ValidationError(
+            raise wtforms.validators.ValidationError(
                 "That username is taken. Please choose a different one"
             )
 
@@ -55,8 +68,8 @@ class RegistrationForm(FlaskForm):
 
             email as entered in the form.
         """
-        user = User.query.filter_by(email=email.data).first()
+        user = flaskblog_user.User.query.filter_by(email=email.data).first()
         if user:
-            raise ValidationError(
+            raise wtforms.validators.ValidationError(
                 "That email address is taken. Please choose a different one"
             )

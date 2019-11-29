@@ -1,10 +1,10 @@
-from flask_wtf import FlaskForm
-from wtforms.fields.core import BooleanField, StringField
-from wtforms.fields.simple import PasswordField, SubmitField
-from wtforms.validators import DataRequired, Email
+import flask_wtf
+import wtforms
+import wtforms.fields.core as wtforms_core
+import wtforms.fields.simple as wtforms_simple
 
 
-class LoginForm(FlaskForm):
+class LoginForm(flask_wtf.FlaskForm):
     """Class representing the login form for the application
 
     Parameters
@@ -13,7 +13,16 @@ class LoginForm(FlaskForm):
 
         Flask wtf class that is extended to create the user login form
     """
-    email = StringField("Email", validators=[DataRequired(), Email()])
-    password = PasswordField("Password", validators=[DataRequired()])
-    remember = BooleanField("Remember Me")
-    submit = SubmitField("Login")
+
+    email = wtforms_core.StringField(
+        "Email",
+        validators=[
+            wtforms.validators.DataRequired(),
+            wtforms.validators.Email(),
+        ],
+    )
+    password = wtforms_simple.PasswordField(
+        "Password", validators=[wtforms.validators.DataRequired()]
+    )
+    remember = wtforms_core.BooleanField("Remember Me")
+    submit = wtforms_simple.SubmitField("Login")
